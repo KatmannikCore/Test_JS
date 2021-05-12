@@ -1,7 +1,8 @@
 let AddTest = document.querySelector('.eee');
 
 let resultArray = [];
-
+let AnswersArray = [];
+let TextArray = [];
 let begin = document.querySelector(".begin");
 let counter = 1;
 AddTest.onclick = function() {
@@ -18,53 +19,51 @@ AddTest.onclick = function() {
     resultArray.push(arryRadio);
     let Answer = prompt("Введите номер/номера правильного ответа: ");
 
+    AnswersArray.push(Answer.split(","));
+    console.log(AnswersArray);
 }
 let name = " ";
-begin.onclick = function() {
 
+begin.onclick = function() {
     let j = 1;
     for (let i = 0; i < resultArray.length; i++) {
 
         if (i % 2 == 0) {
             PrintQuestion(resultArray[i]);
+            TextArray.push(resultArray[i]);
         } else {
             PrintRadoi(resultArray[i], "Radioclass" + j);
             j++;
         }
     }
-    AddButton();
     ButtomDisabled();
+    VisibleButtonCheck()
 }
+
+var element = document.getElementById('button');
 
 function PrintRadoi(arrayRadio, name) {
     for (let i = 0; i < arrayRadio.length; i++) {
         var radioBut = document.createElement('input');
-        radioBut.setAttribute('type', 'radio');
+        radioBut.setAttribute('type', 'checkbox');
         radioBut.setAttribute('name', name);
         radioBut.setAttribute('class', name)
         radioBut.setAttribute('value', i + 1);
-        document.body.appendChild(radioBut);
+        element.appendChild(radioBut);
 
         var labelValue = document.createElement('label');
         labelValue.innerHTML = arrayRadio[i];
-        document.body.appendChild(labelValue);
+        element.appendChild(labelValue);
 
         var br = document.createElement('br');
-        document.body.appendChild(br);
+        element.appendChild(br);
     }
 }
 
 function PrintQuestion(question) {
     var labelValue = document.createElement('div');
     labelValue.innerHTML = question;
-    document.body.appendChild(labelValue);
-}
-
-function AddButton() {
-    var button = document.createElement('button');
-    button.innerHTML = "Проверить";
-    button.setAttribute('class', "check");
-    document.body.appendChild(button)
+    element.appendChild(labelValue);
 }
 
 function ButtomDisabled() {
@@ -72,17 +71,45 @@ function ButtomDisabled() {
     begin.setAttribute('disabled', 'disabled');
 }
 
+function VisibleButtonCheck() {
+    document.querySelector('.check').style.display = 'block';
+
+}
+let WrongAnswerText = [];
+let WrongAnswerNumber;
 document.querySelector('.check').onclick = function() {
+
+    WrongAnswerNumber = 0;
     let data;
-    for (let i = 0; i < resultArray.length / 2; i++) {
-        let radio = document.querySelectorAll(".Radioclass" + Number(i + 1));
+    for (let j = 0; j < TextArray.length; j++) {
+        let checkedRadioTrue = 0;
+        let radio = document.querySelectorAll(".Radioclass" + Number(j + 1));
         for (let i = 0; i < radio.length; i++) {
             if (radio[i].checked) {
                 data = radio[i].value;
-                console.log(data);
-                break;
+                if (data == AnswersArray[j]) {
+                    checkedRadioTrue = i + 1;
+                    break;
+                }
             }
         }
+        if (checkedRadioTrue == 0)
+            WrongAnswerText.push(TextArray[j]);
+        else
+            WrongAnswerNumber++;
     }
+    Print();
+}
 
+function Print() {
+    let result;
+    if (WrongAnswerNumber == TextArray.length)
+        result = "\nВаш результат " + WrongAnswerNumber + " из " + TextArray.length + ". Вы молодец!";
+    else {
+        result = "Вы неправильно ответили на вопросы:\n\n"
+        for (let i = 0; i < WrongAnswerText.length; i++)
+            result += WrongAnswerText[i] + "\n";
+        result += "\nВаш результат " + WrongAnswerNumber + " из " + TextArray.length;
+    }
+    alert(result);
 }
