@@ -20,7 +20,6 @@ AddTest.onclick = function() {
     let Answer = prompt("Введите номер/номера правильного ответа: ");
 
     AnswersArray.push(Answer.split(","));
-    console.log(AnswersArray);
 }
 let name = " ";
 
@@ -77,26 +76,25 @@ function VisibleButtonCheck() {
 }
 let WrongAnswerText = [];
 let WrongAnswerNumber;
-document.querySelector('.check').onclick = function() {
 
+document.querySelector('.check').onclick = function() {
     WrongAnswerNumber = 0;
     let data;
+    let TrueAnswers = [];
     for (let j = 0; j < TextArray.length; j++) {
-        let checkedRadioTrue = 0;
         let radio = document.querySelectorAll(".Radioclass" + Number(j + 1));
         for (let i = 0; i < radio.length; i++) {
             if (radio[i].checked) {
-                data = radio[i].value;
-                if (data == AnswersArray[j]) {
-                    checkedRadioTrue = i + 1;
-                    break;
-                }
+                TrueAnswers.push(radio[i].value);
             }
         }
-        if (checkedRadioTrue == 0)
+        console.log(TrueAnswers);
+        console.log(AnswersArray[j]);
+        if (JSON.stringify(TrueAnswers) != JSON.stringify(AnswersArray[j]))
             WrongAnswerText.push(TextArray[j]);
         else
             WrongAnswerNumber++;
+        TrueAnswers = [];
     }
     Print();
 }
@@ -112,4 +110,11 @@ function Print() {
         result += "\nВаш результат " + WrongAnswerNumber + " из " + TextArray.length;
     }
     alert(result);
+    Clear();
+}
+
+function Clear() {
+    WrongAswerText = [];
+    WrongAnswerNumber = 0;
+    WrongAnswerText = [];
 }
