@@ -115,6 +115,8 @@ function PrintRadoi(arrayRadio, name) {
 //создание вопроса
 function PrintQuestion(question) {
     var labelValue = document.createElement('div');
+    labelValue.style.fontWeight = "bold";
+    labelValue.style.fontSize = "18px";
     labelValue.innerHTML = question;
     element.appendChild(labelValue);
 }
